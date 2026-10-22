@@ -148,6 +148,7 @@ export async function getProductById(id) {
     precioAnterior: Number(data.precio_anterior ?? 0),
     imagen: data.imagen,
     descripcion: data.descripcion,
+    categoria_id: data.categoria_id,
 
     colores: (data.product_colors ?? []).map((item) => ({
       nombre: item.colors.nombre,
@@ -165,8 +166,27 @@ export async function getProductById(id) {
 
 //Obtener productos relacionados
 export async function getRelatedProducts(producto) {
-  return productos.filter(
-    (item) => item.categoria === producto.categoria && item.id !== producto.id
-  );
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("categoria_id", producto.categoria_id)
+    .neq("id", producto.id);
+
+  if (error) {
+    console.error("Error al obtener productos relacionados:", error);
+    return [];
+  }
+
+  return data.map((item) => ({
+    id: item.id,
+    nombre: item.nombre,
+    precio: Number(item.precio),
+    precioAnterior: Number(item.precio_anterior ?? 0),
+    imagen: item.imagen,
+    descripcion: item.descripcion,
+    categoria_id: item.categoria_id,
+    colores: [],
+    tallas: [],
+  }));
 }
 

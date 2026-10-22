@@ -42,9 +42,15 @@ export default function ProductDetail() {
   }
 
   // Inicializamos el color una sola vez cuando ya conocemos el producto.
-  const colorActual = colorSeleccionado ?? producto.colores[0];
+  const colorActual = colorSeleccionado ?? producto.colores[0] ?? null;
 
   function comprarPorWhatsApp() {
+
+    if (!colorActual) {
+      alert("Este producto no tiene colores disponibles.");
+      return;
+    }
+
     if (!tallaSeleccionada) {
       alert("Selecciona una talla.");
       return;
@@ -73,7 +79,11 @@ export default function ProductDetail() {
       <main>
         <section className="product-detail">
           <div className="product-detail-image">
-            <img src={colorActual.imagen} alt={producto.nombre} />
+            {colorActual ? (
+              <img src={colorActual.imagen} alt={producto.nombre} />
+            ) : (
+              <p>Este producto todavía no tiene colores disponibles.</p>
+            )}
           </div>
 
           <div className="product-detail-info">

@@ -3,10 +3,20 @@ export default function ProductColors({
   colorSeleccionado,
   onSelect
 }) {
+  if (!colores || colores.length === 0) {
+    return (
+      <div className="product-option">
+        <p className="option-title">
+          Este producto no tiene colores disponibles.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="product-option">
       <p className="option-title">
-        Color: <strong>{colorSeleccionado.nombre}</strong>
+        Color: <strong>{colorSeleccionado?.nombre ?? "Selecciona un color"}</strong>
       </p>
 
       <div className="color-list">
@@ -15,7 +25,7 @@ export default function ProductColors({
             type="button"
             key={color.nombre}
             className={`color-option ${
-              color.nombre === colorSeleccionado.nombre ? "active" : ""
+              color.nombre === colorSeleccionado?.nombre ? "active" : ""
             }`}
             onClick={() => onSelect(color)}
             aria-label={`Seleccionar color ${color.nombre}`}
